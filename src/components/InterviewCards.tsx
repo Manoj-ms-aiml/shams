@@ -199,7 +199,7 @@ function InterviewCards({ onComplete }: InterviewCardsProps) {
   };
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-[#050506] text-white">
+    <div className="fixed inset-0 overflow-x-hidden overflow-y-auto overscroll-y-contain bg-[#050506] text-white">
       <audio ref={audioRef} preload="auto">
         <source src={resolveMediaPath('audio/background.mp3')} type="audio/mpeg" />
       </audio>
@@ -223,9 +223,9 @@ function InterviewCards({ onComplete }: InterviewCardsProps) {
         />
       )}
 
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-5xl flex-col px-4 py-5 sm:px-6">
+      <div className="relative z-10 mx-auto flex min-h-[100dvh] w-full max-w-5xl flex-col px-4 py-5 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:px-6">
         {phase === 'rules' && (
-          <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-1 items-start justify-center overflow-y-auto py-2 sm:items-center">
             <div className="w-full max-w-2xl rounded-3xl border border-white/20 bg-black/55 p-6 backdrop-blur-md sm:p-8">
               <p className="text-center text-xs tracking-[0.3em] text-red-300">RULE BOOK</p>
               <h2 className="mt-3 text-center text-3xl font-black sm:text-4xl">PLAYER 456 ENTRY TEST</h2>
@@ -256,7 +256,7 @@ function InterviewCards({ onComplete }: InterviewCardsProps) {
         )}
 
         {phase === 'quiz' && (
-          <>
+          <div className="flex min-h-0 flex-1 flex-col">
             <div className="mb-4 rounded-2xl border border-white/15 bg-black/40 p-4 backdrop-blur">
               <p className="text-center text-xs tracking-[0.28em] text-red-300/90">
                 RED LIGHT GREEN LIGHT QUIZ
@@ -283,7 +283,7 @@ function InterviewCards({ onComplete }: InterviewCardsProps) {
               </div>
             </div>
 
-            <div className="flex flex-1 flex-col gap-4">
+            <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-1">
               <div className="rounded-2xl border border-white/15 bg-gradient-to-b from-zinc-900/90 to-black/80 p-5 sm:p-6">
                 <h2 className="text-xl font-bold leading-tight sm:text-3xl">{currentQuestion.question}</h2>
                 <p className="mt-2 text-sm text-zinc-400">Choose one option.</p>
@@ -355,7 +355,7 @@ function InterviewCards({ onComplete }: InterviewCardsProps) {
                 )}
               </div>
             </div>
-          </>
+          </div>
         )}
 
         {phase === 'result' && (
