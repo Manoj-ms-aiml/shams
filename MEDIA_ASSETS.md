@@ -6,7 +6,7 @@ To complete this cinematic experience, you need to add the following media files
 
 Place these in `public/audio/`:
 
-- `tudum.mp3` - Netflix-style sound effect for the intro (2-3 seconds)
+- `tudum.mp3` - Netflix-style sound effect for the intro (6-8 seconds)
 - `season1.mp3` - Narration audio for Season 1 (~45 seconds)
 - `season2.mp3` - Narration audio for Season 2 (~40 seconds)
 - `season3.mp3` - Narration audio for Season 3 (~40 seconds)

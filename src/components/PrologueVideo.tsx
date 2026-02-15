@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { resolveMediaPath } from '../utils/media';
 
 interface PrologueVideoProps {
   onEnd: () => void;
@@ -7,7 +8,6 @@ interface PrologueVideoProps {
 function PrologueVideo({ onEnd }: PrologueVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [fadeOut, setFadeOut] = useState(false);
-  const [canSkip, setCanSkip] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -18,10 +18,6 @@ function PrologueVideo({ onEnd }: PrologueVideoProps) {
     });
 
     const handleTimeUpdate = () => {
-      if (video.currentTime >= 3) {
-        setCanSkip(true);
-      }
-
       if (video.duration - video.currentTime <= 1) {
         setFadeOut(true);
       }
@@ -40,13 +36,6 @@ function PrologueVideo({ onEnd }: PrologueVideoProps) {
     };
   }, [onEnd]);
 
-  const handleSkip = () => {
-    if (canSkip) {
-      setFadeOut(true);
-      setTimeout(onEnd, 500);
-    }
-  };
-
   return (
     <div className="fixed inset-0 bg-black">
       <video
@@ -57,17 +46,8 @@ function PrologueVideo({ onEnd }: PrologueVideoProps) {
         playsInline
         preload="auto"
       >
-        <source src="/videos/prologue.mp4" type="video/mp4" />
+        <source src={resolveMediaPath('videos/prologue.mp4')} type="video/mp4" />
       </video>
-
-      {canSkip && (
-        <button
-          onClick={handleSkip}
-          className="absolute bottom-8 right-8 px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all duration-300"
-        >
-          Skip
-        </button>
-      )}
 
       <div
         className={`absolute inset-0 bg-black pointer-events-none transition-opacity duration-1000 ${

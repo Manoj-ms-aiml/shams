@@ -1,119 +1,173 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import { resolveMediaPath } from '../utils/media';
 
 function FinalScene() {
-  const [stage, setStage] = useState<'bloom' | 'message' | 'fade'>('bloom');
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (audio) {
-      audio.play().catch(err => {
-        console.warn('Audio playback blocked:', err);
-      });
-    }
+    if (!audio) return;
 
-    const bloomTimer = setTimeout(() => {
-      setStage('message');
-    }, 2000);
-
-    const fadeTimer = setTimeout(() => {
-      setStage('fade');
-    }, 12000);
+    audio.loop = true;
+    audio.volume = 0.75;
+    audio.play().catch((err) => {
+      console.warn('Audio playback blocked:', err);
+    });
 
     return () => {
-      clearTimeout(bloomTimer);
-      clearTimeout(fadeTimer);
-      if (audio) {
-        audio.pause();
-      }
+      audio.pause();
+      audio.currentTime = 0;
     };
   }, []);
 
   return (
-    <div className="fixed inset-0 bg-black overflow-hidden">
-      <audio ref={audioRef} loop preload="auto">
-        <source src="/audio/finale.mp3" type="audio/mpeg" />
+    <div className="fixed inset-0 overflow-hidden bg-black">
+      <audio ref={audioRef} preload="auto">
+        <source src={resolveMediaPath('audio/finale.mp3')} type="audio/mpeg" />
       </audio>
 
+      <div className="absolute inset-0 bg-gradient-to-br from-[#05120f] via-[#0a1815] to-[#170d13]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_18%,rgba(82,255,189,0.16),transparent_45%)]" />
       <div
-        className={`absolute inset-0 transition-all duration-2000 ${
-          stage === 'bloom' ? 'blur-lg' : stage === 'message' ? 'blur-0' : 'blur-sm'
-        }`}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900" />
+        className="absolute inset-0 opacity-25"
+        style={{
+          backgroundImage:
+            'repeating-linear-gradient(110deg, rgba(255,255,255,0.08) 0px, rgba(255,255,255,0.08) 1px, transparent 1px, transparent 11px)',
+        }}
+      />
 
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {Array.from({ length: 50 }, (_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-white/30 rounded-full animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${5 + Math.random() * 5}s`,
-              }}
-            />
-          ))}
-        </div>
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+        <div className="friend-stage relative h-64 w-72 sm:h-72 sm:w-96">
+          <div className="friend-floor-glow" />
 
-        <div
-          className={`absolute inset-0 flex items-center justify-center transition-opacity duration-2000 ${
-            stage === 'message' ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <div className="max-w-4xl px-8 text-center">
-            <h1
-              className="text-5xl md:text-7xl font-bold text-white mb-8 leading-tight"
-              style={{
-                textShadow: '0 0 40px rgba(255, 255, 255, 0.3)',
-              }}
-            >
-              YOU'RE NOT ALONE.
-            </h1>
-            <h2
-              className="text-4xl md:text-6xl font-bold text-white/90"
-              style={{
-                textShadow: '0 0 30px rgba(255, 255, 255, 0.2)',
-              }}
-            >
-              NEVER WERE.
-            </h2>
+          <div className="friend-person friend-left">
+            <span className="friend-head" />
+            <span className="friend-body" />
+          </div>
+
+          <div className="friend-person friend-right">
+            <span className="friend-head" />
+            <span className="friend-body" />
           </div>
         </div>
 
-        <div
-          className={`absolute inset-0 bg-gradient-radial from-white/5 via-transparent to-transparent transition-opacity duration-3000 ${
-            stage === 'bloom' ? 'opacity-100 scale-150' : 'opacity-0 scale-100'
-          }`}
-          style={{
-            transform: stage === 'bloom' ? 'scale(1.5)' : 'scale(1)',
-            transition: 'all 3s ease-out',
-          }}
-        />
+        <p className="mt-8 text-sm tracking-[0.24em] text-emerald-200/75">TRUE FRIENDSHIP LASTS</p>
+        <h1 className="mt-3 max-w-3xl text-2xl font-bold leading-tight text-white sm:text-4xl">
+          Real friends stay, no matter what.
+        </h1>
       </div>
 
-      <div
-        className={`absolute inset-0 bg-black transition-opacity duration-5000 ${
-          stage === 'fade' ? 'opacity-100' : 'opacity-0'
-        }`}
-      />
-
       <style>{`
-        @keyframes float {
+        .friend-stage {
+          animation: crowd-energy 2.8s ease-in-out infinite;
+        }
+
+        .friend-floor-glow {
+          position: absolute;
+          left: 50%;
+          bottom: 10px;
+          width: 230px;
+          height: 90px;
+          transform: translateX(-50%);
+          border-radius: 999px;
+          background: radial-gradient(circle, rgba(90, 255, 189, 0.34), rgba(0, 0, 0, 0) 68%);
+          filter: blur(2px);
+        }
+
+        .friend-person {
+          position: absolute;
+          bottom: 16px;
+          width: 96px;
+          height: 182px;
+        }
+
+        .friend-left {
+          left: 46px;
+          transform-origin: right bottom;
+          animation: friend-dance-left 2.75s cubic-bezier(0.22, 0.88, 0.2, 1) infinite;
+        }
+
+        .friend-right {
+          right: 46px;
+          transform-origin: left bottom;
+          animation: friend-dance-right 3.15s cubic-bezier(0.22, 0.88, 0.2, 1) infinite;
+          animation-delay: 0.18s;
+        }
+
+        .friend-head {
+          position: absolute;
+          left: 50%;
+          top: 0;
+          width: 42px;
+          height: 42px;
+          border-radius: 999px;
+          transform: translateX(-50%);
+          background: linear-gradient(180deg, rgba(247, 231, 212, 0.96), rgba(215, 192, 165, 0.96));
+        }
+
+        .friend-body {
+          position: absolute;
+          left: 50%;
+          top: 30px;
+          width: 78px;
+          height: 130px;
+          border-radius: 34px;
+          transform: translateX(-50%);
+          background: linear-gradient(180deg, rgba(33, 183, 124, 0.94), rgba(16, 116, 79, 0.96));
+          box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.14);
+        }
+
+        @keyframes crowd-energy {
           0%, 100% {
-            transform: translateY(0) translateX(0) scale(1);
-            opacity: 0.2;
+            transform: translateY(0);
           }
           50% {
-            transform: translateY(-30px) translateX(15px) scale(1.5);
-            opacity: 0.6;
+            transform: translateY(-2px);
           }
         }
 
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
+        @keyframes friend-dance-left {
+          0%, 100% {
+            transform: translateX(0) rotate(-2deg);
+          }
+          16% {
+            transform: translateX(-4px) rotate(-6deg);
+          }
+          34% {
+            transform: translateX(5px) rotate(2deg);
+          }
+          52% {
+            transform: translateX(-2px) rotate(-4deg);
+          }
+          75% {
+            transform: translateX(7px) rotate(5deg);
+          }
+          88% {
+            transform: translateX(2px) rotate(0deg);
+          }
         }
+
+        @keyframes friend-dance-right {
+          0%, 100% {
+            transform: translateX(0) rotate(3deg);
+          }
+          22% {
+            transform: translateX(4px) rotate(7deg);
+          }
+          38% {
+            transform: translateX(-5px) rotate(1deg);
+          }
+          58% {
+            transform: translateX(3px) rotate(5deg);
+          }
+          74% {
+            transform: translateX(-6px) rotate(-1deg);
+          }
+          90% {
+            transform: translateX(-1px) rotate(2deg);
+          }
+        }
+
       `}</style>
     </div>
   );
