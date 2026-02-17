@@ -157,13 +157,6 @@ function App() {
     return null;
   };
 
-  const getDirectSkipSeason = (): number | null => {
-    const nextIncomplete = getNextIncompleteSeason();
-    if (!nextIncomplete) return null;
-    if (!isSeasonAccessible(nextIncomplete)) return null;
-    return nextIncomplete;
-  };
-
   const handleIntroEnd = () => {
     if (hasCompletedAnySeason) {
       setStage('post-intro-choice');
@@ -195,18 +188,6 @@ function App() {
   };
 
   const handleSkipAfterIntro = () => {
-    const seasonToPlay = getDirectSkipSeason();
-    if (seasonToPlay) {
-      setCurrentSeason(seasonToPlay);
-      setStage('playback');
-      return;
-    }
-
-    if (progress.season4) {
-      setStage('final');
-      return;
-    }
-
     setStage('menu');
   };
 
@@ -255,8 +236,6 @@ function App() {
   };
 
   const nextIncompleteSeason = getNextIncompleteSeason();
-  const directSkipSeason = getDirectSkipSeason();
-
   return (
     <div className="fixed inset-0 bg-black overflow-hidden">
       {stage === 'start' && (
@@ -319,9 +298,7 @@ function App() {
               [ O ] [ /\ ] [ ]
             </h2>
             <p className="mt-3 text-center text-sm text-zinc-200 sm:text-base">
-              {directSkipSeason
-                ? `Season ${directSkipSeason} is ready. Choose your path.`
-                : nextIncompleteSeason
+              {nextIncompleteSeason
                 ? `Season ${nextIncompleteSeason} is locked. Go to the control room for timer or code unlock.`
                 : 'All files complete. Choose how to proceed.'}
             </p>
@@ -333,9 +310,7 @@ function App() {
                 className="group rounded-xl border border-pink-400/60 bg-pink-600/20 px-4 py-4 text-left transition hover:border-pink-300 hover:bg-pink-600/35"
               >
                 <p className="text-xs font-semibold uppercase tracking-[0.25em] text-pink-200">Option 01</p>
-                <p className="mt-2 text-lg font-bold text-white">
-                  {directSkipSeason ? `Skip to Season ${directSkipSeason}` : 'Skip to Season Menu'}
-                </p>
+                <p className="mt-2 text-lg font-bold text-white">Skip to Season Menu</p>
                 <p className="mt-1 text-sm text-zinc-200">Jump ahead without replaying the interview.</p>
               </button>
 
