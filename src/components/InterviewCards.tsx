@@ -199,7 +199,10 @@ function InterviewCards({ onComplete }: InterviewCardsProps) {
   };
 
   return (
-    <div className="fixed inset-0 overflow-hidden bg-[#050506] text-white">
+    <div
+      className="fixed inset-0 overflow-auto bg-[#050506] text-white"
+      style={{ WebkitOverflowScrolling: 'touch' }}
+    >
       <audio ref={audioRef} preload="auto">
         <source src={resolveMediaPath('audio/background.mp3')} type="audio/mpeg" />
       </audio>
@@ -223,7 +226,7 @@ function InterviewCards({ onComplete }: InterviewCardsProps) {
         />
       )}
 
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-5xl flex-col px-4 py-5 sm:px-6">
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-5xl flex-col px-4 py-5 sm:px-6 min-h-0 overflow-y-auto">
         {phase === 'rules' && (
           <div className="flex flex-1 items-center justify-center">
             <div className="w-full max-w-2xl rounded-3xl border border-white/20 bg-black/55 p-6 backdrop-blur-md sm:p-8">
